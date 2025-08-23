@@ -9,6 +9,20 @@ from utils import (
 )
 import os
 
+# Dictionary to map language codes to full names
+LANGUAGE_NAMES = {
+    'en': 'English',
+    'es': 'Spanish',
+    'fr': 'French',
+    'de': 'German',
+    'zh-cn': 'Chinese (Simplified)',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'ar': 'Arabic',
+    'ru': 'Russian',
+    'pt': 'Portuguese',
+}
+
 st.title("Document Translator")
 
 # Create a directory for uploads if it doesn't exist
@@ -25,18 +39,7 @@ uploaded_file = st.file_uploader(
 username = st.text_input("Enter your username")
 target_language = st.selectbox(
     "Select target language",
-    [
-        "English",
-        "Spanish",
-        "French",
-        "German",
-        "Chinese (Simplified)",
-        "Japanese",
-        "Korean",
-        "Arabic",
-        "Russian",
-        "Portuguese",
-    ],
+    list(LANGUAGE_NAMES.values()),
 )
 
 if st.button("Translate"):
@@ -50,12 +53,13 @@ if st.button("Translate"):
 
         if original_text:
             # Detect the language of the original text
-            source_language = detect_language(original_text)
-            st.write(f"Detected source language: {source_language}")
+            source_language_code = detect_language(original_text)
+            source_language_name = LANGUAGE_NAMES.get(source_language_code, "Unknown")
+            st.write(f"Detected source language: {source_language_name}")
 
             # Translate the text
             translated_text = translate_text(
-                original_text, source_language, target_language
+                original_text, source_language_code, target_language
             )
 
             if translated_text:
@@ -81,7 +85,7 @@ if st.button("Translate"):
                 log_activity(
                     username,
                     uploaded_file.name,
-                    source_language,
+                    source_language_name,
                     target_language,
                 )
             else:

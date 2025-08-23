@@ -3,14 +3,10 @@ import pandas as pd
 from docx import Document
 from pptx import Presentation
 import PyPDF2
-from googletrans import Translator, LANGUAGES
+from deep_translator import GoogleTranslator
 from langdetect import detect
 from fpdf import FPDF
 from datetime import datetime
-
-# Dictionary of language codes
-LANGUAGE_CODES = {v: k for k, v in LANGUAGES.items()}
-
 
 def extract_text(file_path):
     """Extracts text from a .docx, .pptx, or .pdf file."""
@@ -40,7 +36,7 @@ def extract_text(file_path):
 def detect_language(text):
     """Detects the language of a given text."""
     try:
-        return LANGUAGES.get(detect(text), "Unknown")
+        return detect(text)
     except Exception as e:
         print(f"Error detecting language: {e}")
         return "Unknown"
@@ -49,16 +45,29 @@ def detect_language(text):
 def translate_text(text, src_lang, dest_lang):
     """Translates text from a source language to a destination language."""
     try:
-        translator = Translator()
-        src_code = LANGUAGE_CODES.get(src_lang.lower(), "auto")
-        dest_code = LANGUAGE_CODES.get(dest_lang.lower())
-        if not dest_code:
+        # Map language names to language codes for deep-translator
+        dest_lang_code = {
+            'english': 'en',
+            'spanish': 'es',
+            'french': 'fr',
+            'german': 'de',
+            'chinese (simplified)': 'zh-CN',
+            'japanese': 'ja',
+            'korean': 'ko',
+            'arabic': 'ar',
+            'russian': 'ru',
+            'portuguese': 'pt'
+        }.get(dest_lang.lower())
+
+        if not dest_lang_code:
             return "Invalid target language"
-        translated = translator.translate(text, src=src_code, dest=dest_code)
-        return translated.text
+
+        translated = GoogleTranslator(source=src_lang, target=dest_lang_code).translate(text)
+        return translated
     except Exception as e:
         print(f"Error translating text: {e}")
         return None
+
 
 
 def create_pdf(text, file_path):
