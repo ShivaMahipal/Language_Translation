@@ -1,0 +1,8 @@
+streamlit  
+python-docx  
+python-pptx  
+PyPDF2  
+googletrans==4.0.0-rc1  
+langdetect  
+fpdf  
+pandas 
