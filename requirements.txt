@@ -1,8 +1,9 @@
-streamlit  
-python-docx  
-python-pptx  
-PyPDF2  
-deep-translator  
-langdetect  
-fpdf  
-pandas 
+streamlit
+python-docx
+python-pptx
+PyPDF2
+deep-translator
+langdetect
+fpdf
+pandas
+PyMuPDF
